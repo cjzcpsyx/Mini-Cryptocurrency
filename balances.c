@@ -90,8 +90,8 @@ int main(int argc, char *argv[])
 
 		/* TODO */
 		/* Feel free to add/modify/delete any code you need to. */
-		struct block parent;
-		block_deserialize(&parent, b.prev_block_hash);
+		// struct block parent;
+		block_print(&b, stdout);
 		// struct blockchain_node node;
 		// memset(node, 0, sizeof(*node));
 	}
