@@ -44,4 +44,6 @@ int block_write(const struct block *b, FILE *fp);
 
 int block_write_filename(const struct block *b, const char *filename);
 
+void block_deserialize(struct block *b, unsigned char buf[SERIALIZED_BLOCK_LEN]);
+
 #endif
