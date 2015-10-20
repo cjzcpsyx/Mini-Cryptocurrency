@@ -233,5 +233,5 @@ int block_write_filename(const struct block *b, const char *filename)
 int block_get_parent(struct block *b, unsigned char buf)
 {
 	block_deserialize(b, buf);
-	return 1
+	return 1;
 }
