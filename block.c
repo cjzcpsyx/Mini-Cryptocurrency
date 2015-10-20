@@ -71,7 +71,7 @@ static void block_serialize(const struct block *b, unsigned char buf[SERIALIZED_
 }
 
 /* Deserialize a block structure from a flat array. */
-static void block_deserialize(struct block *b, unsigned char buf[SERIALIZED_BLOCK_LEN])
+void block_deserialize(struct block *b, unsigned char buf[SERIALIZED_BLOCK_LEN])
 {
 	const unsigned char *p, *endp;
 	unsigned char uint32_buf[4];
