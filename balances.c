@@ -66,6 +66,11 @@ static struct balance *balance_add(struct balance *balances,
 	return p;
 }
 
+int isValid(struct block *b)
+{
+	return 0;
+}
+
 int main(int argc, char *argv[])
 {
 	int i;
@@ -85,6 +90,10 @@ int main(int argc, char *argv[])
 
 		/* TODO */
 		/* Feel free to add/modify/delete any code you need to. */
+		struct block parent;
+		block_deserialize(&parent, b.prev_block_hash);
+		// struct blockchain_node node;
+		// memset(node, 0, sizeof(*node));
 	}
 
 	/* Organize into a tree, check validity, and output balances. */
