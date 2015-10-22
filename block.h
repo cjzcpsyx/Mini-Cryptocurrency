@@ -44,6 +44,6 @@ int block_write(const struct block *b, FILE *fp);
 
 int block_write_filename(const struct block *b, const char *filename);
 
-int block_get_parent(struct block *b, unsigned char buf);
+void block_get_parent(struct block *b, hash_output h);
 
 #endif

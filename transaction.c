@@ -66,6 +66,9 @@ int transaction_set_dest_pubkey(struct transaction *tx,
 	BIGNUM *x, *y;
 	int rc;
 
+	x = NULL;
+	y = NULL;
+
 	x = BN_new();
 	if (x == NULL)
 		goto err;

@@ -230,8 +230,14 @@ int block_write_filename(const struct block *b, const char *filename)
 	return rc == 0;
 }
 
-int block_get_parent(struct block *b, unsigned char buf)
+void block_get_parent(struct block *b, hash_output h)
 {
+	unsigned char buf[SERIALIZED_BLOCK_LEN];
+	SHA256_CTX sha;
+
+	SHA256_Init(&sha);
+	SHA256_Update(&sha, h, sizeof(&h));
+	SHA256_Final(buf, &sha);
+
 	block_deserialize(b, buf);
-	return 1;
 }
