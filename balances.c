@@ -70,15 +70,33 @@ static struct balance *balance_add(struct balance *balances,
 int is_normal_tx_valid(struct blockchain_node *node)
 {
 	struct blockchain_node *temp;
+	hash_output h1, h2;
+	struct transaction *prev_transaction = NULL;
 	// rule 5.1
-
+	temp = node;
+	while (temp->parent != NULL) {
+		temp = temp->parent;
+		transaction_hash(&temp->b.normal_tx, h1);
+		transaction_hash(&temp->b.reward_tx, h2);
+		if (byte32_cmp(node->b.normal_tx.prev_transaction_hash, h1) == 0) {
+			prev_transaction = &temp->b.normal_tx;
+			break;
+		}
+		else if (byte32_cmp(node->b.normal_tx.prev_transaction_hash, h2) == 0) {
+			prev_transaction = &temp->b.reward_tx;
+			break;
+		}
+	}
+	if (prev_transaction == NULL)
+		return 0;
 	// rule 5.2
-
+	if (transaction_verify(&temp->b.normal_tx, prev_transaction) != 1)
+		return 0;
 	// rule 5.3
 	temp = node;
 	while (temp->parent != NULL) {
 		temp = temp->parent;
-		if (temp->b.normal_tx.prev_transaction_hash == node->b.normal_tx.prev_transaction_hash)
+		if (byte32_cmp(temp->b.normal_tx.prev_transaction_hash, node->b.normal_tx.prev_transaction_hash) == 0)
 			return 0;
 	}
 
@@ -93,14 +111,14 @@ int is_valid(struct blockchain_node *node)
 
 	// rule 1.1
 	if (node->b.height == 0
-		&& !byte32_cmp(h, GENESIS_BLOCK_HASH) == 0)
+		&& byte32_cmp(h, GENESIS_BLOCK_HASH) != 0)
 		return 0;
 	// rule 1.2
 	if (node->b.height >= 1
-		&& !(is_valid(node->parent) == 1 && node->parent->b.height == node->b.height - 1))
+		&& !(node->parent != NULL && is_valid(node->parent) == 1 && node->parent->b.height == node->b.height - 1))
 		return 0;
 	// rule 2
-	if (!hash_output_is_below_target(h) == 1)
+	if (hash_output_is_below_target(h) != 1)
 		return 0;
 	// rule 3
 	if (!(node->b.reward_tx.height == node->b.height
@@ -112,8 +130,8 @@ int is_valid(struct blockchain_node *node)
 		|| byte32_is_zero(node->b.reward_tx.src_signature.s) != 1)
 		return 0;
 	// rule 5
-	if (!byte32_is_zero(node->b.normal_tx.prev_transaction_hash)
-		&& !is_normal_tx_valid(node))
+	if (byte32_is_zero(node->b.normal_tx.prev_transaction_hash) != 1
+		&& is_normal_tx_valid(node) != 1)
 		return 0;
 
 	return 1;
@@ -187,11 +205,14 @@ int main(int argc, char *argv[])
 		set_blockchain_relation(&block_nodes[i], block_nodes, block_chain_nodes_size);
 	}
 
-	// for (i = 0; i < block_chain_nodes_size; i++) {
-	// 	set_blockchain_validation(&block_nodes[i]);
-	// }
+	for (i = 0; i < block_chain_nodes_size; i++) {
+		set_blockchain_validation(&block_nodes[i]);
+	}
 
 	struct balance *balances = NULL, *p, *next;
+
+
+
 	/* Print out the list of balances. */
 	for (p = balances; p != NULL; p = next) {
 		next = p->next;
