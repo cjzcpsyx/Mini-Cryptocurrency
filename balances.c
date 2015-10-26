@@ -278,9 +278,17 @@ int main(int argc, char *argv[])
 	    BIGNUM *y = BN_new();
 
 	    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key), x, y, NULL)) {
-	        BN_print_fp(stdout, x);
-	        putc('\n', stdout);
-	        printf("%d\n", j);	    	
+	    	int num_bytes;
+	    	size_t len = sizeof(buf);
+
+			num_bytes = BN_num_bytes(x);
+			if (num_bytes > len)
+				return 0;
+			BN_bn2bin(x, buf + len - num_bytes);
+			if (byte32_cmp(buf, temp->b.reward_tx.dest_pubkey.x) == 0) {
+				printf("%d\n", j);
+				break;
+			}
 	    }
 	}
 	
