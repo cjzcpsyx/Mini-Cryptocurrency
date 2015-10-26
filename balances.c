@@ -262,28 +262,28 @@ int main(int argc, char *argv[])
 
 	// for block mining
 	
-	EC_KEY *mykey = key_read_filename("mykey.priv");
-	EC_KEY *weakkey4 = key_read_filename("weakkey4.priv");
+	// EC_KEY *mykey = key_read_filename("mykey.priv");
+	// EC_KEY *weakkey4 = key_read_filename("weakkey4.priv");
 	EC_KEY *weakkey5 = key_read_filename("weakkey5.priv");
 
 	BIGNUM *x = BN_new();
     BIGNUM *y = BN_new();
 
-    printf("mykey:\n");
-    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(mykey), EC_KEY_get0_public_key(mykey), x, y, NULL)) {
-        BN_print_fp(stdout, x);
-        putc('\n', stdout);
-        BN_print_fp(stdout, y);
-        putc('\n', stdout);
-    }
+    // printf("mykey:\n");
+    // if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(mykey), EC_KEY_get0_public_key(mykey), x, y, NULL)) {
+    //     BN_print_fp(stdout, x);
+    //     putc('\n', stdout);
+    //     BN_print_fp(stdout, y);
+    //     putc('\n', stdout);
+    // }
 
-    printf("weakkey4:\n");
-    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(weakkey4), EC_KEY_get0_public_key(weakkey4), x, y, NULL)) {
-        BN_print_fp(stdout, x);
-        putc('\n', stdout);
-        BN_print_fp(stdout, y);
-        putc('\n', stdout);
-    }
+    // printf("weakkey4:\n");
+    // if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(weakkey4), EC_KEY_get0_public_key(weakkey4), x, y, NULL)) {
+    //     BN_print_fp(stdout, x);
+    //     putc('\n', stdout);
+    //     BN_print_fp(stdout, y);
+    //     putc('\n', stdout);
+    // }
 
     printf("weakkey5:\n");
     if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(weakkey5), EC_KEY_get0_public_key(weakkey5), x, y, NULL)) {
@@ -292,6 +292,8 @@ int main(int argc, char *argv[])
         BN_print_fp(stdout, y);
         putc('\n', stdout);
     }
+
+    block_print(&temp->b, stdout);
 
  //    struct block block4, block5, newblock1, newblock2, headblock;
 	// block4 = temp->parent->b;
@@ -327,7 +329,6 @@ int main(int argc, char *argv[])
 			balances = balance_add(balances, &temp->b.normal_tx.dest_pubkey, 1);
 			balances = balance_add(balances, &prev_transaction->dest_pubkey, -1);
 		}
-		// block_print(&temp->b, stdout);
 		temp = temp->parent;
 	}
 
