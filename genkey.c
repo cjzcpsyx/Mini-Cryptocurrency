@@ -92,6 +92,8 @@ int main(int argc, char *argv[])
 	    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key), x, y, NULL)) {
 	    	printf("%d\n", j);
 	        BN_print_fp(stdout, x);
+	        putc('\n', stdout);
+	        putc('\n', stdout);
 	    }
 	}
 	
