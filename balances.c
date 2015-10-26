@@ -227,24 +227,19 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	// // for block mining
-	// struct block block4, newblock, headblock;
-	// block4 = temp.b;
+	// for block mining
+	// struct block block4, block5, newblock, headblock;
+	// headblock = temp->b;
+	// block4 = temp->parent->b;
+	// block5 = temp->parent->b;
 	// EC_KEY *mykey = key_read_filename("mykey.priv");
-	// EC_KEY *weakkey = 
-	// /* Build on top of the head of the main chain. */
+	// EC_KEY *weakkey4 = key_read_filename("weakkey4.priv");
 	// block_init(&newblock, &headblock);
-	// /* Give the reward to us. */
 	// transaction_set_dest_privkey(&newblock.reward_tx, mykey);
-	// /* The last transaction was in block 4. */
 	// transaction_set_prev_transaction(&newblock.normal_tx, &block4.normal_tx);
-	// /* Send it to us. */
 	// transaction_set_dest_privkey(&newblock.normal_tx, mykey);
-	// /* Sign it with the guessed private key. */
-	// transaction_sign(&newblock.normal_tx, weakkey);
-	// /* Mine the new block. */
+	// transaction_sign(&newblock.normal_tx, weakkey4);
 	// block_mine(&newblock);
-	// /* Save to a file. */
 	// block_write_filename(&newblock, "myblock1.blk");
 
 
@@ -257,6 +252,7 @@ int main(int argc, char *argv[])
 			balances = balance_add(balances, &temp->b.normal_tx.dest_pubkey, 1);
 			balances = balance_add(balances, &prev_transaction->dest_pubkey, -1);
 		}
+		block_print(&temp->b, stdout);
 		temp = temp->parent;
 	}
 
