@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
 	struct transaction *prev_transaction;
 
 	for (i = 0; i < block_chain_nodes_size; i++) {
-		if (block_nodes[i].is_valid && block_nodes[i].b.height > max_height) {
+		if (block_nodes[i].is_valid && block_nodes[i].b.height >= max_height) {
 			temp = &block_nodes[i];
 			max_height = block_nodes[i].b.height;
 		}
@@ -266,6 +266,5 @@ int main(int argc, char *argv[])
 		printf("%s %d\n", byte32_to_hex(p->pubkey.x), p->balance);
 		free(p);
 	}
-
 	return 0;
 }
