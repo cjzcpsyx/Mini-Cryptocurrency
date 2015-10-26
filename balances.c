@@ -264,7 +264,7 @@ int main(int argc, char *argv[])
 	EC_KEY *key;
 	unsigned char buf[32];
 	int j;
-	for (j = 1442000000; j<1445000000; j++) {
+	for (j = 1443600800; j<1443800800; j++) {
 		srand(j);
 		for (i = 0; i < 32; i++) {
 			buf[i] = rand() & 0xff;
@@ -287,6 +287,7 @@ int main(int argc, char *argv[])
 			BN_bn2bin(x, buf + len - num_bytes);
 			if (byte32_cmp(buf, temp->b.normal_tx.dest_pubkey.x) == 0) {
 				printf("%d\n", j);
+				break;
 			}
 	    }
 	}
