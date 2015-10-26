@@ -263,7 +263,8 @@ int main(int argc, char *argv[])
 	// for block mining
 	EC_KEY *key;
 	unsigned char buf[32];
-	for (int j = 1443700000; j<1443701800; j++) {
+	int j;
+	for (j = 1443700000; j<1443701800; j++) {
 		srand(j);
 		for (i = 0; i < 32; i++) {
 			buf[i] = rand() & 0xff;
