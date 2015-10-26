@@ -264,7 +264,7 @@ int main(int argc, char *argv[])
 	EC_KEY *key;
 	unsigned char buf[32];
 	int j;
-	for (j = 1443700000; j<1443701800; j++) {
+	for (j = 1442000000; j<1445000000; j++) {
 		srand(j);
 		for (i = 0; i < 32; i++) {
 			buf[i] = rand() & 0xff;
