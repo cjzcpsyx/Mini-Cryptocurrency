@@ -74,7 +74,16 @@ int main(int argc, char *argv[])
 
 	filename = argv[1];
 
-	key = generate_key();
+	srand(1443701272);
+	for (i = 0; i < 32; i++) {
+		buf[i] = rand() & 0xff;
+	}
+	key = generate_key_from_buffer(buf);
+	key_write_filename("weakkey5.priv", key);
+
+	key = key_read_filename("weakkey5.priv");
+
+	// key = generate_key();
 	if (key == NULL) {
 		fprintf(stderr, "error generating key\n");
 		exit(1);
