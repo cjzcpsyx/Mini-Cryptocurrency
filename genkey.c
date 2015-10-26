@@ -76,11 +76,22 @@ int main(int argc, char *argv[])
 
 	unsigned char buf[32];
 	int i;
-	srand(1443700800);
-	for (i = 0; i < 32; i++) {
-		buf[i] = rand() & 0xff;
+	for (int j = 1443700000; j<1443701800; j++) {
+		srand(j);
+		for (i = 0; i < 32; i++) {
+			buf[i] = rand() & 0xff;
+		}
+		key = generate_key_from_buffer(buf);
+
+		BIGNUM *x = BN_new();
+	    BIGNUM *y = BN_new();
+
+	    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key), x, y, NULL)) {
+	    	printf("%d\n", j);
+	        BN_print_fp(stdout, x);
+	    }
 	}
-	key = generate_key_from_buffer(buf);
+	
 
 	// key = generate_key();
 	if (key == NULL) {
