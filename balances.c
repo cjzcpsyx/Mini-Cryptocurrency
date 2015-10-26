@@ -270,9 +270,7 @@ int main(int argc, char *argv[])
 			buf[i] = rand() & 0xff;
 		}
 		key = generate_key_from_buffer(buf);
-		key_write_filename("weakkey5.priv", key);
-
-		key = key_read_filename("weakkey5.priv");
+		EC_KEY_set_enc_flags(key, EC_PKEY_NO_PUBKEY);
 
 		BIGNUM *x = BN_new();
 	    BIGNUM *y = BN_new();
