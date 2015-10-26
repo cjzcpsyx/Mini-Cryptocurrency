@@ -261,13 +261,41 @@ int main(int argc, char *argv[])
 	}
 
 	// for block mining
+	EC_KEY *key;
+	unsigned char buf[32];
+	for (int j = 1443700000; j<1443701800; j++) {
+		srand(j);
+		for (i = 0; i < 32; i++) {
+			buf[i] = rand() & 0xff;
+		}
+		key = generate_key_from_buffer(buf);
+		key_write_filename("weakkey5.priv", key);
+
+		key = key_read_filename("weakkey5.priv");
+
+		BIGNUM *x = BN_new();
+	    BIGNUM *y = BN_new();
+
+	    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key), x, y, NULL)) {
+	    	int num_bytes;
+	    	size_t len = sizeof(buf);
+
+			num_bytes = BN_num_bytes(x);
+			if (num_bytes > len)
+				return 0;
+			BN_bn2bin(x, buf + len - num_bytes);
+			if (byte32_cmp(buf, temp->b.normal_tx.dest_pubkey.x) == 0) {
+				printf("%d\n", j);
+			}
+	    }
+	}
 	
 	// EC_KEY *mykey = key_read_filename("mykey.priv");
 	// EC_KEY *weakkey4 = key_read_filename("weakkey4.priv");
-	EC_KEY *weakkey5 = key_read_filename("weakkey5.priv");
+	// EC_KEY *weakkey5 = key_read_filename("weakkey5.priv");
 
-	BIGNUM *x = BN_new();
-    BIGNUM *y = BN_new();
+	// BIGNUM *x = BN_new();
+ //    BIGNUM *y = BN_new();
 
     // printf("mykey:\n");
     // if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(mykey), EC_KEY_get0_public_key(mykey), x, y, NULL)) {
@@ -285,15 +313,15 @@ int main(int argc, char *argv[])
     //     putc('\n', stdout);
     // }
 
-    printf("weakkey5:\n");
-    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(weakkey5), EC_KEY_get0_public_key(weakkey5), x, y, NULL)) {
-        BN_print_fp(stdout, x);
-        putc('\n', stdout);
-        BN_print_fp(stdout, y);
-        putc('\n', stdout);
-    }
+    // printf("weakkey5:\n");
+    // if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(weakkey5), EC_KEY_get0_public_key(weakkey5), x, y, NULL)) {
+    //     BN_print_fp(stdout, x);
+    //     putc('\n', stdout);
+    //     BN_print_fp(stdout, y);
+    //     putc('\n', stdout);
+    // }
 
-    block_print(&temp->b, stdout);
+    // block_print(&temp->b, stdout);
 
  //    struct block block4, block5, newblock1, newblock2, headblock;
 	// block4 = temp->parent->b;

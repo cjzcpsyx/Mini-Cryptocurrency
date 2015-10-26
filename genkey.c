@@ -74,31 +74,7 @@ int main(int argc, char *argv[])
 
 	filename = argv[1];
 
-	unsigned char buf[32];
-	int i;
-	for (int j = 1443700000; j<1443701800; j++) {
-		srand(j);
-		for (i = 0; i < 32; i++) {
-			buf[i] = rand() & 0xff;
-		}
-		key = generate_key_from_buffer(buf);
-		key_write_filename(filename, key);
-
-		key = key_read_filename(filename);
-
-		BIGNUM *x = BN_new();
-	    BIGNUM *y = BN_new();
-
-	    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key), x, y, NULL)) {
-	    	printf("%d\n", j);
-	        BN_print_fp(stdout, x);
-	        putc('\n', stdout);
-	        putc('\n', stdout);
-	    }
-	}
-	
-
-	// key = generate_key();
+	key = generate_key();
 	if (key == NULL) {
 		fprintf(stderr, "error generating key\n");
 		exit(1);
