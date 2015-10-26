@@ -66,34 +66,37 @@ static struct balance *balance_add(struct balance *balances,
 	return p;
 }
 
-// return 1 if a block's normal_tx is valid, otherwise return 0
-int is_normal_tx_valid(struct blockchain_node *node)
+struct transaction *find_prev_transaction(struct blockchain_node *node)
 {
-	struct blockchain_node *temp;
+	struct blockchain_node *temp = node;
 	hash_output h1, h2;
-	struct transaction *prev_transaction = NULL;
-	// rule 5.1
-	temp = node;
-	while (temp->parent != NULL) {
-		temp = temp->parent;
+	while (temp != NULL) {
 		transaction_hash(&temp->b.normal_tx, h1);
 		transaction_hash(&temp->b.reward_tx, h2);
 		if (byte32_cmp(node->b.normal_tx.prev_transaction_hash, h1) == 0) {
-			prev_transaction = &temp->b.normal_tx;
-			break;
+			return &temp->b.normal_tx;
 		}
 		else if (byte32_cmp(node->b.normal_tx.prev_transaction_hash, h2) == 0) {
-			prev_transaction = &temp->b.reward_tx;
-			break;
+			return &temp->b.reward_tx;
 		}
+		temp = temp->parent;
 	}
+	return NULL;
+}
+
+// return 1 if a block's normal_tx is valid, otherwise return 0
+int is_normal_tx_valid(struct blockchain_node *node)
+{
+	struct blockchain_node *temp = node;
+	struct transaction *prev_transaction;
+	// rule 5.1
+	prev_transaction = find_prev_transaction(node);
 	if (prev_transaction == NULL)
 		return 0;
 	// rule 5.2
 	if (transaction_verify(&temp->b.normal_tx, prev_transaction) != 1)
 		return 0;
 	// rule 5.3
-	temp = node;
 	while (temp->parent != NULL) {
 		temp = temp->parent;
 		if (byte32_cmp(temp->b.normal_tx.prev_transaction_hash, node->b.normal_tx.prev_transaction_hash) == 0)
@@ -148,7 +151,7 @@ void blockchain_node_init(struct blockchain_node *node, struct block *b)
 }
 
 // set the parent of a block chain node
-void set_blockchain_relation(struct blockchain_node *node, struct blockchain_node block_nodes[], unsigned long block_chain_nodes_size)
+void set_blockchain_relation(struct blockchain_node *node, int block_chain_nodes_size, struct blockchain_node block_nodes[block_chain_nodes_size])
 {
 	int i;
 	hash_output h;
@@ -173,7 +176,8 @@ void set_blockchain_validation(struct blockchain_node *node)
 int main(int argc, char *argv[])
 {
 	int i;
-	struct blockchain_node block_nodes[argc - 1];
+	int block_chain_nodes_size = argc - 1;
+	struct blockchain_node block_nodes[block_chain_nodes_size];
 
 	/* Read input block files. */
 	for (i = 1; i < argc; i++) {
@@ -199,10 +203,8 @@ int main(int argc, char *argv[])
 	/* Organize into a tree, check validity, and output balances. */
 	/* TODO */
 
-	unsigned long block_chain_nodes_size = (sizeof(block_nodes)/sizeof(block_nodes[0]));
-
 	for (i = 0; i < block_chain_nodes_size; i++) {
-		set_blockchain_relation(&block_nodes[i], block_nodes, block_chain_nodes_size);
+		set_blockchain_relation(&block_nodes[i], block_chain_nodes_size, block_nodes);
 	}
 
 	for (i = 0; i < block_chain_nodes_size; i++) {
@@ -211,6 +213,27 @@ int main(int argc, char *argv[])
 
 	struct balance *balances = NULL, *p, *next;
 
+	int max_height = 0;
+	struct blockchain_node *temp = NULL;
+	struct transaction *prev_transaction;
+
+	for (i = 0; i < block_chain_nodes_size; i++) {
+		if (block_nodes[i].is_valid && block_nodes[i].b.height > max_height) {
+			temp = &block_nodes[i];
+			max_height = block_nodes[i].b.height;
+		}
+	}
+
+	while (temp != NULL) {
+		balances = balance_add(balances, &temp->b.reward_tx.dest_pubkey, 1);
+
+		if (byte32_is_zero(temp->b.normal_tx.prev_transaction_hash) != 1) {
+			prev_transaction = find_prev_transaction(temp);
+			balances = balance_add(balances, &temp->b.normal_tx.dest_pubkey, 1);
+			balances = balance_add(balances, &prev_transaction->dest_pubkey, -1);
+		}
+		temp = temp->parent;
+	}
 
 
 	/* Print out the list of balances. */
