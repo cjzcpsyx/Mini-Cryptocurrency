@@ -74,23 +74,9 @@ int main(int argc, char *argv[])
 
 	filename = argv[1];
 
-	struct tm date;
-    time_t t;
-
-    date.tm_sec = 0;
-    date.tm_min = 0;
-    date.tm_hour = 12;
-    date.tm_mday = 1;
-    date.tm_mon = 10;
-    date.tm_year = 2015 - 1900;
-    date.tm_isdst = 0;
-    date.tm_zone = "UTC";
-
-    t = mktime( &date );
-
 	unsigned char buf[32];
 	int i;
-	srand(time(&t));
+	srand(1443700800);
 	for (i = 0; i < 32; i++) {
 		buf[i] = rand() & 0xff;
 	}
