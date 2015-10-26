@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
 	unsigned char buf[32];
 	int i;
-	srand(1234);
+	srand(time());
 	for (i = 0; i < 32; i++) {
 		buf[i] = rand() & 0xff;
 	}
