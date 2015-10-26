@@ -203,16 +203,19 @@ int main(int argc, char *argv[])
 	/* Organize into a tree, check validity, and output balances. */
 	/* TODO */
 
+	// set block chain nodes' relations
 	for (i = 0; i < block_chain_nodes_size; i++) {
 		set_blockchain_relation(&block_nodes[i], block_chain_nodes_size, block_nodes);
 	}
 
+	// set is_valid for each block chain node
 	for (i = 0; i < block_chain_nodes_size; i++) {
 		set_blockchain_validation(&block_nodes[i]);
 	}
 
 	struct balance *balances = NULL, *p, *next;
 
+	// get deepest valid leaf
 	int max_height = 0;
 	struct blockchain_node *temp = NULL;
 	struct transaction *prev_transaction;
@@ -224,6 +227,28 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	// // for block mining
+	// struct block block4, newblock, headblock;
+	// block4 = temp.b;
+	// EC_KEY *mykey = key_read_filename("mykey.priv");
+	// EC_KEY *weakkey = 
+	// /* Build on top of the head of the main chain. */
+	// block_init(&newblock, &headblock);
+	// /* Give the reward to us. */
+	// transaction_set_dest_privkey(&newblock.reward_tx, mykey);
+	// /* The last transaction was in block 4. */
+	// transaction_set_prev_transaction(&newblock.normal_tx, &block4.normal_tx);
+	// /* Send it to us. */
+	// transaction_set_dest_privkey(&newblock.normal_tx, mykey);
+	// /* Sign it with the guessed private key. */
+	// transaction_sign(&newblock.normal_tx, weakkey);
+	// /* Mine the new block. */
+	// block_mine(&newblock);
+	// /* Save to a file. */
+	// block_write_filename(&newblock, "myblock1.blk");
+
+
+	// construct balance linked list
 	while (temp != NULL) {
 		balances = balance_add(balances, &temp->b.reward_tx.dest_pubkey, 1);
 
@@ -234,7 +259,6 @@ int main(int argc, char *argv[])
 		}
 		temp = temp->parent;
 	}
-
 
 	/* Print out the list of balances. */
 	for (p = balances; p != NULL; p = next) {
