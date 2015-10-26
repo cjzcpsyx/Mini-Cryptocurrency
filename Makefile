@@ -1,5 +1,5 @@
-CFLAGS = -g -Wall -Wno-unused-function -Werror -Wno-deprecated-declarations
-LDFLAGS = 
+CFLAGS = -g -Wall -Wno-unused-function -Werror -Wno-deprecated-declarations -I/usr/local/opt/openssl/include
+LDFLAGS = -L/usr/local/opt/openssl/lib
 LDLIBS = -lcrypto -lssl
 
 all: balances genkey
