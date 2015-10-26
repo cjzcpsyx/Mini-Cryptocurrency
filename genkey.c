@@ -82,6 +82,9 @@ int main(int argc, char *argv[])
 			buf[i] = rand() & 0xff;
 		}
 		key = generate_key_from_buffer(buf);
+		key_write_filename(filename, key);
+
+		key = key_read_filename(filename);
 
 		BIGNUM *x = BN_new();
 	    BIGNUM *y = BN_new();
