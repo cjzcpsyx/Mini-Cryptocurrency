@@ -1,6 +1,9 @@
 
 1. 60,883,825,480
+
 2. 22 seconds
-3.
+
+3. The current number of hash iterations needed to mine a Bitcoin block is 2.6149404e+20 (60,883,825,480 * 2^32). Additionally, it takes 22 seconds to mine one of our blocks; we divide 22 by 41807993 - the nonce of the block we mined, and the number of hash iterations - to get an average time for how long it takes for one hash operation: 5.26215167e-7 seconds. That time is multiplied by 2.6149404e+20, the numbers of Bitcoin hash operations, to get the time needed to mine a Bitcoin block: 1.3760213e+14 seconds. 
+
 4.
 
