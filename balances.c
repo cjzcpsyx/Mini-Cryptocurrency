@@ -261,63 +261,62 @@ int main(int argc, char *argv[])
 	}
 
 	// for block mining
-	
-	// EC_KEY *mykey = key_read_filename("mykey.priv");
-	// EC_KEY *weakkey4 = key_read_filename("weakkey4.priv");
-	// EC_KEY *weakkey5 = key_read_filename("weakkey5.priv");
+	EC_KEY *mykey = key_read_filename("mykey.priv");
+	EC_KEY *weakkey4 = key_read_filename("weakkey4.priv");
+	EC_KEY *weakkey5 = key_read_filename("weakkey5.priv");
 
-	// BIGNUM *x = BN_new();
- //    BIGNUM *y = BN_new();
+	BIGNUM *x = BN_new();
+    BIGNUM *y = BN_new();
 
-    // printf("mykey:\n");
-    // if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(mykey), EC_KEY_get0_public_key(mykey), x, y, NULL)) {
-    //     BN_print_fp(stdout, x);
-    //     putc('\n', stdout);
-    //     BN_print_fp(stdout, y);
-    //     putc('\n', stdout);
-    // }
+    printf("mykey:\n");
+    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(mykey), EC_KEY_get0_public_key(mykey), x, y, NULL)) {
+        BN_print_fp(stdout, x);
+        putc('\n', stdout);
+        BN_print_fp(stdout, y);
+        putc('\n', stdout);
+    }
 
-    // printf("weakkey4:\n");
-    // if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(weakkey4), EC_KEY_get0_public_key(weakkey4), x, y, NULL)) {
-    //     BN_print_fp(stdout, x);
-    //     putc('\n', stdout);
-    //     BN_print_fp(stdout, y);
-    //     putc('\n', stdout);
-    // }
+    printf("weakkey4:\n");
+    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(weakkey4), EC_KEY_get0_public_key(weakkey4), x, y, NULL)) {
+        BN_print_fp(stdout, x);
+        putc('\n', stdout);
+        BN_print_fp(stdout, y);
+        putc('\n', stdout);
+    }
 
-    // printf("weakkey5:\n");
-    // if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(weakkey5), EC_KEY_get0_public_key(weakkey5), x, y, NULL)) {
-    //     BN_print_fp(stdout, x);
-    //     putc('\n', stdout);
-    //     BN_print_fp(stdout, y);
-    //     putc('\n', stdout);
-    // }
+    printf("weakkey5:\n");
+    if (EC_POINT_get_affine_coordinates_GFp(EC_KEY_get0_group(weakkey5), EC_KEY_get0_public_key(weakkey5), x, y, NULL)) {
+        BN_print_fp(stdout, x);
+        putc('\n', stdout);
+        BN_print_fp(stdout, y);
+        putc('\n', stdout);
+    }
 
-    // block_print(&temp->b, stdout);
+    
 
- //    struct block block4, block5, newblock1, newblock2, headblock;
-	// block4 = temp->parent->b;
-	// block5 = temp->parent->b;
+    struct block block4, block5, newblock1, newblock2, headblock;
+	block4 = temp->parent->b;
+	block5 = temp->parent->b;
 
-	// // mine from block4
-	// headblock = block5;
-	// block_init(&newblock1, &headblock);
-	// transaction_set_dest_privkey(&newblock1.reward_tx, mykey);
-	// transaction_set_prev_transaction(&newblock1.normal_tx, &block4.normal_tx);
-	// transaction_set_dest_privkey(&newblock1.normal_tx, mykey);
-	// transaction_sign(&newblock1.normal_tx, weakkey4);
-	// block_mine(&newblock1);
-	// block_write_filename(&newblock1, "myblock1.blk");
+	// mine from block4
+	headblock = block5;
+	block_init(&newblock1, &headblock);
+	transaction_set_dest_privkey(&newblock1.reward_tx, mykey);
+	transaction_set_prev_transaction(&newblock1.normal_tx, &block4.normal_tx);
+	transaction_set_dest_privkey(&newblock1.normal_tx, mykey);
+	transaction_sign(&newblock1.normal_tx, weakkey4);
+	block_mine(&newblock1);
+	block_write_filename(&newblock1, "myblock1.blk");
 
-	// // mine from block5
-	// headblock = newblock1;
-	// block_init(&newblock2, &headblock);
-	// transaction_set_dest_privkey(&newblock2.reward_tx, mykey);
-	// transaction_set_prev_transaction(&newblock2.normal_tx, &block5.normal_tx);
-	// transaction_set_dest_privkey(&newblock2.normal_tx, mykey);
-	// transaction_sign(&newblock2.normal_tx, weakkey5);
-	// block_mine(&newblock2);
-	// block_write_filename(&newblock2, "myblock2.blk");
+	// mine from block5
+	headblock = newblock1;
+	block_init(&newblock2, &headblock);
+	transaction_set_dest_privkey(&newblock2.reward_tx, mykey);
+	transaction_set_prev_transaction(&newblock2.normal_tx, &block5.normal_tx);
+	transaction_set_dest_privkey(&newblock2.normal_tx, mykey);
+	transaction_sign(&newblock2.normal_tx, weakkey5);
+	block_mine(&newblock2);
+	block_write_filename(&newblock2, "myblock2.blk");
 
 
 	// construct balance linked list
