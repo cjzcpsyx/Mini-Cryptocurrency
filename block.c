@@ -135,7 +135,6 @@ void block_hash(const struct block *b, hash_output h)
  * TARGET_HASH. */
 void block_mine(struct block *b)
 {
-	/* TODO */
 	hash_output h;
 	block_hash(b, h);
 	while (hash_output_is_below_target(h) != 1) {
