@@ -143,10 +143,7 @@ int is_valid(struct blockchain_node *node)
 // construct a blockchain_node from a block
 void blockchain_node_init(struct blockchain_node *node, struct block *b)
 {
-	struct block parent;
-	block_get_parent(&parent, b->prev_block_hash);
 	memset(node, 0, sizeof(*node));
-
 	node->b = *b;
 }
 
@@ -171,39 +168,6 @@ void set_blockchain_relation(struct blockchain_node *node, int block_chain_nodes
 void set_blockchain_validation(struct blockchain_node *node)
 {
 	node->is_valid = is_valid(node);
-}
-
-static EC_KEY *generate_key_from_buffer(const unsigned char buf[32])
-{
-	EC_KEY *key;
-	BIGNUM *bn;
-	int rc;
-
-	key = NULL;
-	bn = NULL;
-
-	key = EC_KEY_new_by_curve_name(EC_GROUP_NID);
-	if (key == NULL)
-		goto err;
-
-	bn = BN_bin2bn(buf, 32, NULL);
-	if (bn == NULL)
-		goto err;
-
-	rc = EC_KEY_set_private_key(key, bn);
-	if (rc != 1)
-		goto err;
-
-	BN_free(bn);
-
-	return key;
-
-err:
-	if (key != NULL)
-		EC_KEY_free(key);
-	if (bn != NULL)
-		BN_free(bn);
-	return NULL;
 }
 
 int main(int argc, char *argv[])
