@@ -323,7 +323,6 @@ int main(int argc, char *argv[])
 			balances = balance_add(balances, &temp->b.normal_tx.dest_pubkey, 1);
 			balances = balance_add(balances, &prev_transaction->dest_pubkey, -1);
 		}
-		block_print(&temp->b, stdout);
 		temp = temp->parent;
 	}
 
