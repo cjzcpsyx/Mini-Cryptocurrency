@@ -25,6 +25,7 @@ has the same normal_tx.prev_transaction_hash.
 
 ### Mining a new block
 It is possible to steal coins of we can guess the private key that correspons to a public key.
+
 An outline of mining process.
 ```
 /* Build on top of the head of the main chain. */
