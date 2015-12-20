@@ -1,5 +1,6 @@
 # Mini-Cryptocurrency
 An implementation of a Bitcoin-like cryptocurrency, including validating blocks and transactions, organizing blocks into a blockchain, and computing the balance corresponding to accounts.
+
 ### Rules of a valid block
 * If the block has height 0 (the “genesis block”), its SHA256 hash must be the hardcoded
 value 0000000e5ac98c789800702ad2a6f3ca510d409d6cca892ed1c75198e04bdeec.
@@ -21,8 +22,10 @@ transaction that has hash value normal_tx.prev_transaction_hash. (Use the
 transaction_verify function.)
 * The coin must not have already been spent: there must be no ancestor block that
 has the same normal_tx.prev_transaction_hash.
+
 ### Mining a new block
 It is possible to steal coins of we can guess the private key that correspons to a public key.
+An outline of mining process.
 ```
 /* Build on top of the head of the main chain. */
 block_init(&newblock, &headblock);
