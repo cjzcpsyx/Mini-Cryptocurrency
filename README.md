@@ -21,3 +21,22 @@ transaction that has hash value normal_tx.prev_transaction_hash. (Use the
 transaction_verify function.)
 * The coin must not have already been spent: there must be no ancestor block that
 has the same normal_tx.prev_transaction_hash.
+### Mining a new block
+It is possible to steal coins of we can guess the private key that correspons to a public key.
+```
+/* Build on top of the head of the main chain. */
+block_init(&newblock, &headblock);
+/* Give the reward to us. */
+transaction_set_dest_privkey(&newblock.reward_tx, mykey);
+/* The last transaction was in block 4. */
+transaction_set_prev_transaction(&newblock.normal_tx,
+&block4.normal_tx);
+/* Send it to us. */
+transaction_set_dest_privkey(&newblock.normal_tx, mykey);
+/* Sign it with the guessed private key. */
+transaction_sign(&newblock.normal_tx, weakkey);
+/* Mine the new block. */
+block_mine(&newblock);
+/* Save to a file. */
+block_write_filename(&newblock, "myblock1.blk");
+```
